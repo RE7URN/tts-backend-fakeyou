@@ -84,11 +84,22 @@
 
     async function verificarUsuario(username) {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`);
+        const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!res.ok) {
+          console.error(`❌ Error HTTP ${res.status}`);
+          return false;
+        }
+
         const data = await res.json();
         return data.allowed;
       } catch (err) {
-        console.error("❌ Error al verificar usuario:", err);
+        console.error("❌ Error en verificarUsuario:", err);
         return false;
       }
     }
@@ -99,56 +110,55 @@
           method: "POST"
         });
       } catch (err) {
-        console.warn("⚠️ No se pudo consumir el permiso:", err);
+        console.error("⚠️ Error al consumir permiso:", err);
       }
     }
 
-    async function enviarMensaje(voice, message) {
-      const endpoint = "/api/tts-fakeyou";
+    async function enviarMensaje(username, voice, message) {
       try {
+        const endpoint = voice.startsWith("TM:") ? "/api/tts-fakeyou" : "/api/tts";
         const res = await fetch(`${BACKEND_URL}${endpoint}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ voice, message })
+          body: JSON.stringify({ username, voice, message })
         });
 
-        if (!res.ok) {
-          const errMsg = await res.text();
-          console.error("❌ Error del servidor:", errMsg);
+        if (res.ok) {
+          const audio = new Audio(URL.createObjectURL(await res.blob()));
+          audio.play();
+          return true;
+        } else {
+          console.error("❌ Error al generar TTS:", await res.text());
           return false;
         }
-
-        const audio = new Audio(URL.createObjectURL(await res.blob()));
-        audio.play();
-        return true;
-      } catch (error) {
-        console.error("❌ Error de red al enviar mensaje:", error);
+      } catch (err) {
+        console.error("❌ Error en enviarMensaje:", err);
         return false;
       }
     }
 
     async function enviar() {
       const username = document.getElementById("usuario").value.trim().toLowerCase();
-      const message = document.getElementById("mensaje").value.trim();
+      const message = document.getElementById("mensaje").value;
       const voice = document.getElementById("voz").value;
 
-      if (!username || !voice || !message) {
+      if (!username || !message) {
         alert("Por favor, rellena todos los campos.");
         return;
       }
 
       const permitido = await verificarUsuario(username);
       if (!permitido) {
-        alert("⚠️ No estás autorizado. Canjea la recompensa 'TTS' primero.");
+        alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
         return;
       }
 
-      const enviado = await enviarMensaje(voice, message);
+      const enviado = await enviarMensaje(username, voice, message);
       if (enviado) {
         alert("✅ Mensaje enviado con éxito");
         await consumirPermiso(username);
       } else {
-        alert("❌ Error al enviar tu mensaje");
+        alert("❌ Hubo un error al enviar tu mensaje");
       }
     }
   </script>
