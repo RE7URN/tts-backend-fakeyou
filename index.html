@@ -83,56 +83,72 @@
     const BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
 
     async function verificarUsuario(username) {
-      const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`);
-      const data = await res.json();
-      return data.allowed;
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`);
+        const data = await res.json();
+        return data.allowed;
+      } catch (err) {
+        console.error("❌ Error al verificar usuario:", err);
+        return false;
+      }
     }
 
     async function consumirPermiso(username) {
-      await fetch(`${BACKEND_URL}/api/consume/${username}`, {
-        method: "POST"
-      });
+      try {
+        await fetch(`${BACKEND_URL}/api/consume/${username}`, {
+          method: "POST"
+        });
+      } catch (err) {
+        console.warn("⚠️ No se pudo consumir el permiso:", err);
+      }
     }
 
-    async function enviarMensaje(username, voice, message) {
-      const endpoint = voice.startsWith("TM:") ? "/api/tts-fakeyou" : "/api/tts";
-      const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, voice, message })
-      });
+    async function enviarMensaje(voice, message) {
+      const endpoint = "/api/tts-fakeyou";
+      try {
+        const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ voice, message })
+        });
 
-      if (res.ok) {
+        if (!res.ok) {
+          const errMsg = await res.text();
+          console.error("❌ Error del servidor:", errMsg);
+          return false;
+        }
+
         const audio = new Audio(URL.createObjectURL(await res.blob()));
         audio.play();
         return true;
-      } else {
+      } catch (error) {
+        console.error("❌ Error de red al enviar mensaje:", error);
         return false;
       }
     }
 
     async function enviar() {
       const username = document.getElementById("usuario").value.trim().toLowerCase();
-      const message = document.getElementById("mensaje").value;
+      const message = document.getElementById("mensaje").value.trim();
       const voice = document.getElementById("voz").value;
 
-      if (!username || !message) {
+      if (!username || !voice || !message) {
         alert("Por favor, rellena todos los campos.");
         return;
       }
 
       const permitido = await verificarUsuario(username);
       if (!permitido) {
-        alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
+        alert("⚠️ No estás autorizado. Canjea la recompensa 'TTS' primero.");
         return;
       }
 
-      const enviado = await enviarMensaje(username, voice, message);
+      const enviado = await enviarMensaje(voice, message);
       if (enviado) {
         alert("✅ Mensaje enviado con éxito");
         await consumirPermiso(username);
       } else {
-        alert("❌ Hubo un error al enviar tu mensaje");
+        alert("❌ Error al enviar tu mensaje");
       }
     }
   </script>
