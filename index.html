@@ -116,12 +116,17 @@
 
     async function enviarMensaje(username, voice, message) {
       try {
-        const endpoint = voice.startsWith("TM:") ? "/api/tts-fakeyou" : "/api/tts";
-        const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, voice, message })
-        });
+        const endpoint = voice.startsWith("TM:")
+  ? "/api/tts-fakeyou"
+  : voice.startsWith("EL:")
+  ? "/api/tts-elevenlabs"
+  : "/api/tts"; // fallback si en el futuro agregas más opciones
+
+const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ username, voice, message })
+});
 
         if (res.ok) {
           const audio = new Audio(URL.createObjectURL(await res.blob()));
