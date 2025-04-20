@@ -40,9 +40,17 @@
       bottom: 25%;
       left: 50%;
       transform: translateX(-50%);
-      width: 150px;
+      width: 200px; /* tamaño aumentado */
       display: none;
       z-index: 9;
+      animation: pulse 1.2s infinite ease-in-out;
+    }
+
+    /* Animación de "pulso" */
+    @keyframes pulse {
+      0% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.1); }
+      100% { transform: translateX(-50%) scale(1); }
     }
   </style>
 </head>
@@ -51,7 +59,11 @@
   <div id="mensajeOverlay"></div>
 
   <!-- Imagen GIF personalizada -->
-  <img id="gifHablando" src="/hablando.gif" alt="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM5dXVzaXVtMWVncXJmbWtvbmI0MjAwanZrYnVsdndzbXdiZDhqaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FMGyadaG0ZKbxi03UB/giphy.gif" />
+  <img
+    id="gifHablando"
+    src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM5dXVzaXVtMWVncXJmbWtvbmI0MjAwanZrYnVsdndzbXdiZDhqaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FMGyadaG0ZKbxi03UB/giphy.gif"
+    alt="GIF hablando"
+  />
 
   <script>
     const OVERLAY_BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
