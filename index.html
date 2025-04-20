@@ -108,30 +108,37 @@
     }
 
     async function enviarMensaje(username, voice, message) {
-      try {
-        const endpoint = "/api/tts";
+  try {
+    const endpoint = "/api/tts";
 
-        const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, voice, message })
-        });
+    const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, voice, message })
+    });
 
-        if (res.ok) {
-          const audio = new Audio(URL.createObjectURL(await res.blob()));
-          localStorage.setItem("ultimoMensaje", `${username}: ${message}`);
-          window.dispatchEvent(new Event("storage")); // 🔄 fuerza actualización en overlay
-          audio.play();
-          return true;
-        } else {
-          console.error("❌ Error al generar TTS:", await res.text());
-          return false;
-        }
-      } catch (err) {
-        console.error("❌ Error en enviarMensaje:", err);
-        return false;
-      }
+    if (res.ok) {
+      const audio = new Audio(URL.createObjectURL(await res.blob()));
+
+      // ⏳ Espera a que el audio comience a reproducirse
+      audio.onplay = () => {
+        // 🟣 Manda mensaje al overlay en el momento justo
+        localStorage.setItem("ultimoMensaje", `${username}: ${message}`);
+        window.dispatchEvent(new Event("storage"));
+      };
+
+      audio.play();
+      return true;
+    } else {
+      console.error("❌ Error al generar TTS:", await res.text());
+      return false;
     }
+  } catch (err) {
+    console.error("❌ Error en enviarMensaje:", err);
+    return false;
+  }
+}
+
 
     async function enviar() {
       const username = document.getElementById("usuario").value.trim().toLowerCase();
