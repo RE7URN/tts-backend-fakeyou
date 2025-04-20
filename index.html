@@ -16,6 +16,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      overflow: hidden;
     }
     .container {
       background-color: #1f1f23;
@@ -60,6 +61,30 @@
     button:hover {
       background-color: #9333ea;
     }
+
+    /* 🟣 Estilo del mensaje que aparece en pantalla */
+    #mensajeMostrado {
+      position: fixed;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%) scale(0.95);
+      background: rgba(168, 85, 247, 0.85);
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      font-size: 1.4rem;
+      color: white;
+      max-width: 90%;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    #mensajeMostrado.visible {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -78,23 +103,18 @@
     <button onclick="enviar()">Enviar mensaje</button>
   </div>
 
+  <div id="mensajeMostrado"></div>
+
   <script>
     const BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
 
     async function verificarUsuario(username) {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
-
+        const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`);
         if (!res.ok) {
           console.error(`❌ Error HTTP ${res.status}`);
           return false;
         }
-
         const data = await res.json();
         return data.allowed;
       } catch (err) {
@@ -114,28 +134,29 @@
     }
 
     async function enviarMensaje(username, voice, message) {
-  try {
-    const endpoint = "/api/tts";
+      try {
+        const endpoint = "/api/tts";
 
-    const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, voice, message })
-    });
+        const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, voice, message })
+        });
 
-    if (res.ok) {
-      const audio = new Audio(URL.createObjectURL(await res.blob()));
-      audio.play();
-      return true;
-    } else {
-      console.error("❌ Error al generar TTS:", await res.text());
-      return false;
+        if (res.ok) {
+          const audio = new Audio(URL.createObjectURL(await res.blob()));
+          mostrarMensajeEnPantalla(`${username}: ${message}`);
+          audio.play();
+          return true;
+        } else {
+          console.error("❌ Error al generar TTS:", await res.text());
+          return false;
+        }
+      } catch (err) {
+        console.error("❌ Error en enviarMensaje:", err);
+        return false;
+      }
     }
-  } catch (err) {
-    console.error("❌ Error en enviarMensaje:", err);
-    return false;
-  }
-}
 
     async function enviar() {
       const username = document.getElementById("usuario").value.trim().toLowerCase();
@@ -160,6 +181,17 @@
       } else {
         alert("❌ Hubo un error al enviar tu mensaje");
       }
+    }
+
+    function mostrarMensajeEnPantalla(texto) {
+      const div = document.getElementById("mensajeMostrado");
+      div.textContent = texto;
+      div.classList.add("visible");
+
+      setTimeout(() => {
+        div.classList.remove("visible");
+        div.textContent = "";
+      }, 5000);
     }
   </script>
 </body>
