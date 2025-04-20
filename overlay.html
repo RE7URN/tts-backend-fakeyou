@@ -17,9 +17,6 @@
       bottom: 10%;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(169, 85, 247, 0.8);
-      padding: 1rem 2rem;
-      border-radius: 1rem;
       color: white;
       font-size: 1.8rem;
       white-space: pre-wrap;
@@ -28,25 +25,25 @@
       opacity: 0;
       transition: opacity 0.3s ease;
       z-index: 10;
+      background: none; /* ❌ sin fondo */
+      padding: 0; /* ❌ sin padding */
     }
 
     #mensajeOverlay.visible {
       opacity: 1;
     }
 
-    /* 🟣 GIF que aparece junto al mensaje */
     #gifHablando {
       position: fixed;
-      bottom: 25%;
+      bottom: 22%;
       left: 50%;
       transform: translateX(-50%);
-      width: 200px; /* tamaño aumentado */
+      width: 180px;
       display: none;
       z-index: 9;
       animation: pulse 1.2s infinite ease-in-out;
     }
 
-    /* Animación de "pulso" */
     @keyframes pulse {
       0% { transform: translateX(-50%) scale(1); }
       50% { transform: translateX(-50%) scale(1.1); }
@@ -55,10 +52,7 @@
   </style>
 </head>
 <body>
-  <!-- Contenedor de mensaje -->
   <div id="mensajeOverlay"></div>
-
-  <!-- Imagen GIF personalizada -->
   <img
     id="gifHablando"
     src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM5dXVzaXVtMWVncXJmbWtvbmI0MjAwanZrYnVsdndzbXdiZDhqaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FMGyadaG0ZKbxi03UB/giphy.gif"
@@ -66,35 +60,23 @@
   />
 
   <script>
-    const OVERLAY_BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
     const overlayDiv = document.getElementById("mensajeOverlay");
     const gif = document.getElementById("gifHablando");
-    let ultimoMensaje = "";
 
-    async function actualizarMensaje() {
-      try {
-        const res = await fetch(`${OVERLAY_BACKEND_URL}/api/last-message`);
-        const data = await res.json();
+    window.addEventListener("message", (event) => {
+      const { type, text } = event.data;
 
-        if (data.message && data.message !== ultimoMensaje) {
-          ultimoMensaje = data.message;
-          overlayDiv.textContent = data.message;
+      if (type === "MOSTRAR_TTS") {
+        overlayDiv.textContent = text;
+        overlayDiv.classList.add("visible");
+        gif.style.display = "block";
 
-          // Mostrar texto y GIF
-          overlayDiv.classList.add("visible");
-          gif.style.display = "block";
-
-          setTimeout(() => {
-            overlayDiv.classList.remove("visible");
-            gif.style.display = "none";
-          }, 5000);
-        }
-      } catch (err) {
-        console.error("Error al consultar mensaje TTS:", err);
+        setTimeout(() => {
+          overlayDiv.classList.remove("visible");
+          gif.style.display = "none";
+        }, 5000);
       }
-    }
-
-    setInterval(actualizarMensaje, 1000);
+    });
   </script>
 </body>
 </html>
