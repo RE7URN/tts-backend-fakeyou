@@ -16,7 +16,6 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow: hidden;
     }
     .container {
       background-color: #1f1f23;
@@ -68,9 +67,9 @@
     <h1>TTS de JoanMiii</h1>
     <input type="text" id="usuario" placeholder="Tu usuario de Twitch" />
     <select id="voz">
-      <option value="EL:vqIbpHNnKXv33Ytdhbs2">IlloJuan</option> 
-      <option value="EL:wA5XnqHS6bwma6dOu6kL">ElXokas</option>
-      <option value="EL:LKjU9l8WPQk4DGoxLUGN">Ibai</option>
+      <option value="EL:vqIbpHNnKXv33Ytdhbs2">IlloJuan (ElevenLabs)</option> 
+      <option value="EL:wA5XnqHS6bwma6dOu6kL">ElXokas (ElevenLabs)</option>
+      <option value="EL:pnrFZfOqa3fN4Y1UaaYz">Lorena (ElevenLabs 🇪🇸)</option>
       <option value="EL:XB0fDUnXU5powFXDhCwa">Antonio (ElevenLabs 🇪🇸)</option>
       <option value="EL:tN5NjK8GiLK5kRnr6t8d">Elena (ElevenLabs 🇪🇸)</option>
       <option value="EL:CYw3kZ02Hs0563khs1Fj">María (ElevenLabs 🇪🇸)</option>
@@ -85,10 +84,6 @@
     async function verificarUsuario(username) {
       try {
         const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`);
-        if (!res.ok) {
-          console.error(`❌ Error HTTP ${res.status}`);
-          return false;
-        }
         const data = await res.json();
         return data.allowed;
       } catch (err) {
@@ -108,37 +103,38 @@
     }
 
     async function enviarMensaje(username, voice, message) {
-  try {
-    const endpoint = "/api/tts";
+      try {
+        const endpoint = "/api/tts";
 
-    const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, voice, message })
-    });
+        const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, voice, message })
+        });
 
-    if (res.ok) {
-      const audio = new Audio(URL.createObjectURL(await res.blob()));
+        if (res.ok) {
+          const audioBlob = await res.blob();
+          const audio = new Audio(URL.createObjectURL(audioBlob));
 
-      // ⏳ Espera a que el audio comience a reproducirse
-      audio.onplay = () => {
-        // 🟣 Manda mensaje al overlay en el momento justo
-        localStorage.setItem("ultimoMensaje", `${username}: ${message}`);
-        window.dispatchEvent(new Event("storage"));
-      };
+          audio.addEventListener("canplaythrough", () => {
+            const ws = new WebSocket("wss://ttsfakeyou-joanmibackend-oauth.up.railway.app");
+            ws.addEventListener("open", () => {
+              ws.send(`${username}: ${message}`);
+            });
 
-      audio.play();
-      return true;
-    } else {
-      console.error("❌ Error al generar TTS:", await res.text());
-      return false;
+            audio.play();
+          });
+
+          return true;
+        } else {
+          console.error("❌ Error al generar TTS:", await res.text());
+          return false;
+        }
+      } catch (err) {
+        console.error("❌ Error en enviarMensaje:", err);
+        return false;
+      }
     }
-  } catch (err) {
-    console.error("❌ Error en enviarMensaje:", err);
-    return false;
-  }
-}
-
 
     async function enviar() {
       const username = document.getElementById("usuario").value.trim().toLowerCase();
