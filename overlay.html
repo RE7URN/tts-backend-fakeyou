@@ -58,21 +58,27 @@
     };
 
     ws.onmessage = async (event) => {
-      const data = JSON.parse(event.data);
-      const { text, audioUrl } = data;
+      try {
+        const data = JSON.parse(event.data);
+        const { text, audioUrl } = data;
 
-      overlayDiv.textContent = text;
-      overlayDiv.classList.add("visible");
-      gif.style.display = "block";
+        // Mostrar mensaje y GIF
+        overlayDiv.textContent = text;
+        overlayDiv.classList.add("visible");
+        gif.style.display = "block";
 
-      const audio = new Audio(audioUrl);
-      audio.play();
+        const audio = new Audio(audioUrl);
+        audio.volume = 1.0;
+        audio.play();
 
-      audio.addEventListener("ended", () => {
-        overlayDiv.classList.remove("visible");
-        gif.style.display = "none";
-        overlayDiv.textContent = "";
-      });
+        audio.addEventListener("ended", () => {
+          overlayDiv.classList.remove("visible");
+          gif.style.display = "none";
+          overlayDiv.textContent = "";
+        });
+      } catch (e) {
+        console.error("❌ Error procesando el mensaje del WebSocket:", e);
+      }
     };
 
     ws.onerror = (error) => {
