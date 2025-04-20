@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>TTS Overlay</title>
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      color: white;
+      font-size: 3rem;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #mensaje {
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      background-color: rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 20px rgba(128, 0, 128, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div id="mensaje"></div>
+
+  <script>
+    const mensajeEl = document.getElementById("mensaje");
+
+    function actualizarMensaje() {
+      const texto = localStorage.getItem("lastTTSMessage") || "";
+      mensajeEl.textContent = texto;
+    }
+
+    // Actualizar cada 1 segundo para detectar nuevos mensajes
+    actualizarMensaje();
+    setInterval(actualizarMensaje, 1000);
+  </script>
+</body>
+</html>
