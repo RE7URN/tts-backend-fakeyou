@@ -51,25 +51,28 @@
     const overlayDiv = document.getElementById("mensajeOverlay");
     const gif = document.getElementById("gifHablando");
 
-    const ws = new WebSocket("wss://ttsfakeyou-joanmibackend-oauth.up.railway.app"); // Ajusta si tu backend está en otra URL
+    const ws = new WebSocket("wss://ttsfakeyou-joanmibackend-oauth.up.railway.app");
 
     ws.onopen = () => {
       console.log("🟢 Conectado al WebSocket del overlay");
     };
 
-    ws.onmessage = (event) => {
-      const mensaje = event.data;
+    ws.onmessage = async (event) => {
+      const data = JSON.parse(event.data);
+      const { text, audioUrl } = data;
 
-      // Mostrar mensaje y GIF
-      overlayDiv.textContent = mensaje;
+      overlayDiv.textContent = text;
       overlayDiv.classList.add("visible");
       gif.style.display = "block";
 
-      setTimeout(() => {
+      const audio = new Audio(audioUrl);
+      audio.play();
+
+      audio.addEventListener("ended", () => {
         overlayDiv.classList.remove("visible");
         gif.style.display = "none";
         overlayDiv.textContent = "";
-      }, 5000);
+      });
     };
 
     ws.onerror = (error) => {
