@@ -61,30 +61,6 @@
     button:hover {
       background-color: #9333ea;
     }
-
-    /* 🟣 Estilo del mensaje que aparece en pantalla */
-    #mensajeMostrado {
-      position: fixed;
-      bottom: 10%;
-      left: 50%;
-      transform: translateX(-50%) scale(0.95);
-      background: rgba(168, 85, 247, 0.85);
-      padding: 1rem 2rem;
-      border-radius: 1rem;
-      font-size: 1.4rem;
-      color: white;
-      max-width: 90%;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    #mensajeMostrado.visible {
-      opacity: 1;
-      transform: translateX(-50%) scale(1.05);
-    }
   </style>
 </head>
 <body>
@@ -102,8 +78,6 @@
     <textarea id="mensaje" placeholder="Escribe tu mensaje aquí..."></textarea>
     <button onclick="enviar()">Enviar mensaje</button>
   </div>
-
-  <div id="mensajeMostrado"></div>
 
   <script>
     const BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
@@ -145,7 +119,8 @@
 
         if (res.ok) {
           const audio = new Audio(URL.createObjectURL(await res.blob()));
-          mostrarMensajeEnPantalla(`${username}: ${message}`);
+          localStorage.setItem("ultimoMensaje", `${username}: ${message}`);
+          window.dispatchEvent(new Event("storage")); // 🔄 fuerza actualización en overlay
           audio.play();
           return true;
         } else {
@@ -181,17 +156,6 @@
       } else {
         alert("❌ Hubo un error al enviar tu mensaje");
       }
-    }
-
-    function mostrarMensajeEnPantalla(texto) {
-      const div = document.getElementById("mensajeMostrado");
-      div.textContent = texto;
-      div.classList.add("visible");
-
-      setTimeout(() => {
-        div.classList.remove("visible");
-        div.textContent = "";
-      }, 5000);
     }
   </script>
 </body>
