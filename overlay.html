@@ -11,12 +11,13 @@
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
     }
+
     #mensajeOverlay {
       position: fixed;
       bottom: 10%;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(169, 85, 247, 0);
+      background: rgba(169, 85, 247, 0.8);
       padding: 1rem 2rem;
       border-radius: 1rem;
       color: white;
@@ -26,18 +27,36 @@
       max-width: 90%;
       opacity: 0;
       transition: opacity 0.3s ease;
+      z-index: 10;
     }
+
     #mensajeOverlay.visible {
       opacity: 1;
+    }
+
+    /* 🟣 GIF que aparece junto al mensaje */
+    #gifHablando {
+      position: fixed;
+      bottom: 25%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      display: none;
+      z-index: 9;
     }
   </style>
 </head>
 <body>
+  <!-- Contenedor de mensaje -->
   <div id="mensajeOverlay"></div>
+
+  <!-- Imagen GIF personalizada -->
+  <img id="gifHablando" src="/hablando.gif" alt="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM5dXVzaXVtMWVncXJmbWtvbmI0MjAwanZrYnVsdndzbXdiZDhqaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FMGyadaG0ZKbxi03UB/giphy.gif" />
 
   <script>
     const OVERLAY_BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
     const overlayDiv = document.getElementById("mensajeOverlay");
+    const gif = document.getElementById("gifHablando");
     let ultimoMensaje = "";
 
     async function actualizarMensaje() {
@@ -48,10 +67,14 @@
         if (data.message && data.message !== ultimoMensaje) {
           ultimoMensaje = data.message;
           overlayDiv.textContent = data.message;
+
+          // Mostrar texto y GIF
           overlayDiv.classList.add("visible");
+          gif.style.display = "block";
 
           setTimeout(() => {
             overlayDiv.classList.remove("visible");
+            gif.style.display = "none";
           }, 5000);
         }
       } catch (err) {
