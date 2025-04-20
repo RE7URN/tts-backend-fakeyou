@@ -74,6 +74,12 @@
       <option value="TM:a3wtt6fg38xa">Messi (FakeYou)</option>
       <option value="TM:fm3dk4tsbwjv">Homero Simpson (FakeYou)</option>
       <option value="TM:zs628y2f45fcyce1rpbdk0tqp">Arthur Morgan (FakeYou)</option>
+      <option value="EL:zcAOhNBS3c14rBihAFp1">Sergio (ElevenLabs 🇪🇸)</option>
+      <option value="EL:zcAOhNBS3c14rBihAFp1">Sergio (ElevenLabs 🇪🇸)</option>
+      <option value="EL:pnrFZfOqa3fN4Y1UaaYz">Lorena (ElevenLabs 🇪🇸)</option>
+      <option value="EL:XB0fDUnXU5powFXDhCwa">Antonio (ElevenLabs 🇪🇸)</option>
+      <option value="EL:tN5NjK8GiLK5kRnr6t8d">Elena (ElevenLabs 🇪🇸)</option>
+      <option value="EL:CYw3kZ02Hs0563khs1Fj">María (ElevenLabs 🇪🇸)</option>
     </select>
     <textarea id="mensaje" placeholder="Escribe tu mensaje aquí..."></textarea>
     <button onclick="enviar()">Enviar mensaje</button>
@@ -115,32 +121,32 @@
     }
 
     async function enviarMensaje(username, voice, message) {
-      try {
-        const endpoint = voice.startsWith("TM:")
-  ? "/api/tts-fakeyou"
-  : voice.startsWith("EL:")
-  ? "/api/tts-elevenlabs"
-  : "/api/tts"; // fallback si en el futuro agregas más opciones
+  try {
+    const endpoint = voice.startsWith("TM:")
+      ? "/api/tts-fakeyou"
+      : voice.startsWith("EL:")
+      ? "/api/tts-elevenlabs"
+      : "/api/tts";
 
-const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ username, voice, message })
-});
+    const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, voice, message })
+    });
 
-        if (res.ok) {
-          const audio = new Audio(URL.createObjectURL(await res.blob()));
-          audio.play();
-          return true;
-        } else {
-          console.error("❌ Error al generar TTS:", await res.text());
-          return false;
-        }
-      } catch (err) {
-        console.error("❌ Error en enviarMensaje:", err);
-        return false;
-      }
+    if (res.ok) {
+      const audio = new Audio(URL.createObjectURL(await res.blob()));
+      audio.play();
+      return true;
+    } else {
+      console.error("❌ Error al generar TTS:", await res.text());
+      return false;
     }
+  } catch (err) {
+    console.error("❌ Error en enviarMensaje:", err);
+    return false;
+  }
+}
 
     async function enviar() {
       const username = document.getElementById("usuario").value.trim().toLowerCase();
