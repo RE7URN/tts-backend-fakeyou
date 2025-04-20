@@ -1,43 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>TTS Overlay</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overlay TTS</title>
   <style>
     body {
       margin: 0;
+      padding: 0;
       background: transparent;
-      color: white;
-      font-size: 3rem;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
     }
-    #mensaje {
+
+    #mensajeMostrado {
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%) scale(1);
+      background: rgba(168, 85, 247, 0.85);
       padding: 1rem 2rem;
       border-radius: 1rem;
-      background-color: rgba(0, 0, 0, 0.6);
-      box-shadow: 0 0 20px rgba(128, 0, 128, 0.5);
+      font-size: 1.8rem;
+      color: white;
+      max-width: 90%;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    #mensajeMostrado.visible {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.05);
     }
   </style>
 </head>
 <body>
-  <div id="mensaje"></div>
+  <div id="mensajeMostrado"></div>
 
   <script>
-    const mensajeEl = document.getElementById("mensaje");
+    const div = document.getElementById("mensajeMostrado");
 
-    function actualizarMensaje() {
-      const texto = localStorage.getItem("lastTTSMessage") || "";
-      mensajeEl.textContent = texto;
+    function mostrarMensaje(texto) {
+      div.textContent = texto;
+      div.classList.add("visible");
+
+      setTimeout(() => {
+        div.classList.remove("visible");
+        div.textContent = "";
+      }, 5000);
     }
 
-    // Actualizar cada 1 segundo para detectar nuevos mensajes
-    actualizarMensaje();
-    setInterval(actualizarMensaje, 1000);
+    // Mostrar el último mensaje si está en localStorage (refresco rápido)
+    const mensajeInicial = localStorage.getItem("ultimoMensaje");
+    if (mensajeInicial) {
+      mostrarMensaje(mensajeInicial);
+    }
+
+    // Escuchar cambios en localStorage para mostrar nuevo mensaje en OBS
+    window.addEventListener("storage", (e) => {
+      if (e.key === "ultimoMensaje") {
+        mostrarMensaje(e.newValue);
+      }
+    });
   </script>
 </body>
 </html>
