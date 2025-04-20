@@ -2,69 +2,64 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Overlay TTS</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       background: transparent;
-      overflow: hidden;
       font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
     }
-
-    #mensajeMostrado {
-      position: absolute;
+    #mensajeOverlay {
+      position: fixed;
       bottom: 10%;
       left: 50%;
-      transform: translateX(-50%) scale(1);
-      background: rgba(168, 85, 247, 0.85);
+      transform: translateX(-50%);
+      background: rgba(168, 85, 247, 0.9);
       padding: 1rem 2rem;
       border-radius: 1rem;
-      font-size: 1.8rem;
       color: white;
-      max-width: 90%;
+      font-size: 1.8rem;
+      white-space: pre-wrap;
       text-align: center;
+      max-width: 90%;
       opacity: 0;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      pointer-events: none;
-      z-index: 9999;
+      transition: opacity 0.3s ease;
     }
-
-    #mensajeMostrado.visible {
+    #mensajeOverlay.visible {
       opacity: 1;
-      transform: translateX(-50%) scale(1.05);
     }
   </style>
 </head>
 <body>
-  <div id="mensajeMostrado"></div>
+  <div id="mensajeOverlay"></div>
 
   <script>
-    const div = document.getElementById("mensajeMostrado");
+    const OVERLAY_BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
+    const overlayDiv = document.getElementById("mensajeOverlay");
+    let ultimoMensaje = "";
 
-    function mostrarMensaje(texto) {
-      div.textContent = texto;
-      div.classList.add("visible");
+    async function actualizarMensaje() {
+      try {
+        const res = await fetch(`${OVERLAY_BACKEND_URL}/api/last-message`);
+        const data = await res.json();
 
-      setTimeout(() => {
-        div.classList.remove("visible");
-        div.textContent = "";
-      }, 5000);
-    }
+        if (data.message && data.message !== ultimoMensaje) {
+          ultimoMensaje = data.message;
+          overlayDiv.textContent = data.message;
+          overlayDiv.classList.add("visible");
 
-    // Mostrar el último mensaje si está en localStorage (refresco rápido)
-    const mensajeInicial = localStorage.getItem("ultimoMensaje");
-    if (mensajeInicial) {
-      mostrarMensaje(mensajeInicial);
-    }
-
-    // Escuchar cambios en localStorage para mostrar nuevo mensaje en OBS
-    window.addEventListener("storage", (e) => {
-      if (e.key === "ultimoMensaje") {
-        mostrarMensaje(e.newValue);
+          setTimeout(() => {
+            overlayDiv.classList.remove("visible");
+          }, 5000);
+        }
+      } catch (err) {
+        console.error("Error al consultar mensaje TTS:", err);
       }
-    });
+    }
+
+    setInterval(actualizarMensaje, 1000);
   </script>
 </body>
 </html>
