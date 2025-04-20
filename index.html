@@ -102,45 +102,27 @@
     }
 
     async function enviarMensaje(username, voice, message) {
-  try {
-    const endpoint = "/api/tts";
+      try {
+        const endpoint = "/api/tts";
 
-    const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, voice, message })
-    });
-
-    if (res.ok) {
-      const audioBlob = await res.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-
-      audio.addEventListener("canplaythrough", () => {
-        const ws = new WebSocket("wss://ttsfakeyou-joanmibackend-oauth.up.railway.app");
-
-        ws.addEventListener("open", () => {
-          ws.send(JSON.stringify({
-            text: `${username}: ${message}`,
-            audioUrl: audioUrl
-          }));
-
-          // Puedes reproducir el audio también en el navegador si lo deseas
-          audio.play();
+        const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, voice, message })
         });
-      });
 
-      return true;
-    } else {
-      console.error("❌ Error al generar TTS:", await res.text());
-      return false;
+        if (res.ok) {
+          // No se reproduce el audio en el navegador, solo se manda al overlay
+          return true;
+        } else {
+          console.error("❌ Error al generar TTS:", await res.text());
+          return false;
+        }
+      } catch (err) {
+        console.error("❌ Error en enviarMensaje:", err);
+        return false;
+      }
     }
-  } catch (err) {
-    console.error("❌ Error en enviarMensaje:", err);
-    return false;
-  }
-}
-
 
     async function enviar() {
       const username = document.getElementById("usuario").value.trim().toLowerCase();
