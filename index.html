@@ -122,11 +122,7 @@
 
     async function enviarMensaje(username, voice, message) {
   try {
-    const endpoint = voice.startsWith("TM:")
-      ? "/api/tts-fakeyou"
-      : voice.startsWith("EL:")
-      ? "/api/tts-elevenlabs"
-      : "/api/tts";
+    const endpoint = "/api/tts";
 
     const res = await fetch(`${BACKEND_URL}${endpoint}`, {
       method: "POST",
