@@ -12,9 +12,19 @@
       overflow: hidden;
     }
 
+    #gifHablando {
+      position: fixed;
+      bottom: 35%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      display: none;
+      z-index: 2;
+    }
+
     #mensajeOverlay {
       position: fixed;
-      bottom: 10%;
+      bottom: 15%;
       left: 50%;
       transform: translateX(-50%);
       color: white;
@@ -24,59 +34,47 @@
       max-width: 90%;
       opacity: 0;
       transition: opacity 0.3s ease;
-      z-index: 10;
-      background: none; /* ❌ sin fondo */
-      padding: 0; /* ❌ sin padding */
+      z-index: 1;
     }
 
     #mensajeOverlay.visible {
       opacity: 1;
     }
-
-    #gifHablando {
-      position: fixed;
-      bottom: 22%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 180px;
-      display: none;
-      z-index: 9;
-      animation: pulse 1.2s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.1); }
-      100% { transform: translateX(-50%) scale(1); }
-    }
   </style>
 </head>
 <body>
+
+  <img id="gifHablando" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM5dXVzaXVtMWVncXJmbWtvbmI0MjAwanZrYnVsdndzbXdiZDhqaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FMGyadaG0ZKbxi03UB/giphy.gif" alt="GIF hablando" />
   <div id="mensajeOverlay"></div>
-  <img
-    id="gifHablando"
-    src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM5dXVzaXVtMWVncXJmbWtvbmI0MjAwanZrYnVsdndzbXdiZDhqaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FMGyadaG0ZKbxi03UB/giphy.gif"
-    alt="GIF hablando"
-  />
 
   <script>
     const overlayDiv = document.getElementById("mensajeOverlay");
     const gif = document.getElementById("gifHablando");
 
-    window.addEventListener("message", (event) => {
-      const { type, text } = event.data;
+    const ws = new WebSocket("wss://ttsfakeyou-joanmibackend-oauth.up.railway.app"); // Ajusta si tu backend está en otra URL
 
-      if (type === "MOSTRAR_TTS") {
-        overlayDiv.textContent = text;
-        overlayDiv.classList.add("visible");
-        gif.style.display = "block";
+    ws.onopen = () => {
+      console.log("🟢 Conectado al WebSocket del overlay");
+    };
 
-        setTimeout(() => {
-          overlayDiv.classList.remove("visible");
-          gif.style.display = "none";
-        }, 5000);
-      }
-    });
+    ws.onmessage = (event) => {
+      const mensaje = event.data;
+
+      // Mostrar mensaje y GIF
+      overlayDiv.textContent = mensaje;
+      overlayDiv.classList.add("visible");
+      gif.style.display = "block";
+
+      setTimeout(() => {
+        overlayDiv.classList.remove("visible");
+        gif.style.display = "none";
+        overlayDiv.textContent = "";
+      }, 5000);
+    };
+
+    ws.onerror = (error) => {
+      console.error("❌ Error WebSocket:", error);
+    };
   </script>
 </body>
 </html>
