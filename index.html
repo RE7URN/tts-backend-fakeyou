@@ -6,147 +6,176 @@
   <title>TTS JoanMiii</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <style>
- body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #0e0e10;
-  color: #fff;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  position: relative;
-}
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0e0e10;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+      flex-direction: column;
+    }
 
-.container {
-  background-color: #1f1f23;
-  padding: 2rem;
-  border-radius: 1rem;
-  width: 90%;
-  max-width: 500px;
-  text-align: center;
-  box-shadow: none; /* ❌ Sin halo morado */
-  animation: fadeInUp 0.8s ease forwards;
-  min-height: 380px; /* 🔒 Asegura una altura base para alinear la guía */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+    .container {
+      background-color: #1f1f23;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: none;
+      animation: fadeInUp 0.8s ease forwards;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 2;
+    }
 
-.guia {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: calc(50% + 300px); /* un poco a la derecha del panel central */
-  background-color: #1f1f23; /* Igual que el panel principal */
-  padding: 2rem;
-  border-radius: 1rem;
-  width: 280px;
-  box-shadow: none;
-  animation: fadeInRight 1s ease forwards;
-}
+    .guia {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: calc(50% + 300px);
+      background-color: #1f1f23;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 280px;
+      box-shadow: none;
+      animation: fadeInRight 1s ease forwards;
+      z-index: 2;
+    }
 
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #c084fc;
+    }
 
-h1 {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: #c084fc;
-}
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      background-color: #2e2e33;
+      border: 1px solid #555;
+      color: #fff;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
 
-input, select, textarea {
-  width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  background-color: #2e2e33;
-  border: 1px solid #555;
-  color: #fff;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-}
+    textarea {
+      resize: none;
+      height: 100px;
+    }
 
-textarea {
-  resize: none;
-  height: 100px;
-}
+    button {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      background-color: #a855f7;
+      border: none;
+      color: white;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-button {
-  margin-top: 1rem;
-  width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
-  background-color: #a855f7;
-  border: none;
-  color: white;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+    button:hover {
+      background-color: #9333ea;
+    }
 
-button:hover {
-  background-color: #9333ea;
-}
+    .guia h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      color: #c084fc;
+      text-align: center;
+    }
 
-.guia h2 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  color: #c084fc;
-  text-align: center;
-}
+    .guia ol {
+      padding-left: 1.2rem;
+      margin-top: 1rem;
+    }
 
-.guia ol {
-  padding-left: 1.2rem;
-  margin-top: 1rem;
-}
+    .guia li {
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
 
-.guia li {
-  margin-bottom: 0.75rem;
-  line-height: 1.5;
-}
+    .panel-footer {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #1f1f23;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.6rem;
+      font-size: 0.85rem;
+      opacity: 0.6;
+      color: #fff;
+      text-align: center;
+      z-index: 1;
+    }
 
-/* Animaciones */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    .panel-footer a {
+      color: #c084fc;
+      text-decoration: none;
+    }
 
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
+    .panel-footer a:hover {
+      text-decoration: underline;
+    }
 
-/* Responsive (movemos la guía abajo) */
-@media (max-width: 768px) {
-  .guia {
-    position: static;
-    width: 90%;
-    margin-top: 2rem;
-    transform: none;
-    left: auto;
-    top: auto;
-  }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  body {
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
-    padding: 2rem 1rem;
-  }
-}
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
 
+    @media (max-width: 768px) {
+      .guia {
+        position: static;
+        width: 90%;
+        margin-top: 2rem;
+        transform: none;
+        left: auto;
+        top: auto;
+      }
+
+      body {
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        padding: 2rem 1rem;
+      }
+
+      .panel-footer {
+        position: static;
+        transform: none;
+        margin-top: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -172,6 +201,11 @@ button:hover {
       <li>Elige la voz que prefieras.</li>
       <li>Escribe tu mensaje y haz clic en enviar.</li>
     </ol>
+  </div>
+
+  <div class="panel-footer">
+    Herramienta creada por JoanMiii. Sigue el canal de 
+    <a href="https://www.twitch.tv/joanmiii" target="_blank">Twitch</a> para apoyar.
   </div>
 
   <script>
