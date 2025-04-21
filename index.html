@@ -14,9 +14,12 @@
       color: #fff;
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      align-items: flex-start;
+      gap: 2rem;
+      flex-wrap: wrap;
+      padding: 2rem;
     }
+
     .container {
       background-color: #1f1f23;
       padding: 2rem;
@@ -25,12 +28,15 @@
       width: 90%;
       max-width: 500px;
       text-align: center;
+      flex: 1;
     }
+
     h1 {
       font-size: 1.8rem;
       margin-bottom: 1.5rem;
       color: #c084fc;
     }
+
     input, select, textarea {
       width: 100%;
       padding: 0.75rem;
@@ -41,10 +47,12 @@
       border-radius: 0.5rem;
       font-size: 1rem;
     }
+
     textarea {
       resize: none;
       height: 100px;
     }
+
     button {
       margin-top: 1rem;
       width: 100%;
@@ -57,8 +65,48 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
+
     button:hover {
       background-color: #9333ea;
+    }
+
+    /* 📘 Guía lateral */
+    .guia {
+      background-color: #1f1f23;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 20px rgba(128, 0, 128, 0.3);
+      max-width: 350px;
+      width: 100%;
+      flex: 1;
+    }
+
+    .guia h2 {
+      margin-top: 0;
+      color: #c084fc;
+      font-size: 1.3rem;
+    }
+
+    .guia ol {
+      padding-left: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    .guia li {
+      margin-bottom: 0.8rem;
+      line-height: 1.4;
+    }
+
+    /* 📱 Responsive en móviles */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .container, .guia {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -75,6 +123,16 @@
     </select>
     <textarea id="mensaje" placeholder="Escribe tu mensaje aquí..."></textarea>
     <button onclick="enviar()">Enviar mensaje</button>
+  </div>
+
+  <div class="guia">
+    <h2>¿Cómo usar el TTS?</h2>
+    <ol>
+      <li>Canjea la recompensa "TTS" en el canal de Twitch.</li>
+      <li>Escribe tu nombre de usuario en minúsculas.</li>
+      <li>Elige la voz que prefieras.</li>
+      <li>Escribe tu mensaje y haz clic en enviar.</li>
+    </ol>
   </div>
 
   <script>
@@ -104,20 +162,13 @@
     async function enviarMensaje(username, voice, message) {
       try {
         const endpoint = "/api/tts";
-
         const res = await fetch(`${BACKEND_URL}${endpoint}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, voice, message })
         });
 
-        if (res.ok) {
-          // No se reproduce el audio en el navegador, solo se manda al overlay
-          return true;
-        } else {
-          console.error("❌ Error al generar TTS:", await res.text());
-          return false;
-        }
+        return res.ok;
       } catch (err) {
         console.error("❌ Error en enviarMensaje:", err);
         return false;
