@@ -6,33 +6,42 @@
   <title>TTS JoanMiii</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <style>
-  body {
+ body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #0e0e10;
   color: #fff;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  gap: 2rem;
-  flex-wrap: wrap;
-  text-align: center;
-  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
 }
 
-.container, .guia {
+.container {
   background-color: #1f1f23;
   padding: 2rem;
   border-radius: 1rem;
   width: 90%;
   max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(128, 0, 128, 0.4);
+  animation: fadeInUp 0.8s ease forwards;
 }
 
 .guia {
-  max-width: 350px;
-  text-align: left;
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 300px); /* desplazado a la derecha del centro */
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  width: 280px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  animation: fadeInRight 1s ease forwards;
 }
 
 h1 {
@@ -76,8 +85,8 @@ button:hover {
 
 .guia h2 {
   margin-top: 0;
+  font-size: 1.2rem;
   color: #c084fc;
-  font-size: 1.3rem;
   text-align: center;
 }
 
@@ -87,29 +96,49 @@ button:hover {
 }
 
 .guia li {
-  margin-bottom: 0.8rem;
-  line-height: 1.4;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
 }
 
-/* Responsive */
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive (movemos la guía abajo) */
 @media (max-width: 768px) {
+  .guia {
+    position: static;
+    width: 90%;
+    margin-top: 2rem;
+    transform: none;
+    left: auto;
+    top: auto;
+  }
+
   body {
     flex-direction: column;
     align-items: center;
+    overflow-y: auto;
     padding: 2rem 1rem;
-  }
-
-  .container, .guia {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .guia {
-    text-align: center;
-  }
-
-  .guia ol {
-    padding-left: 1rem;
   }
 }
 
