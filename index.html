@@ -10,56 +10,71 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #fff;
-      background: linear-gradient(to top, #0e0e10, #3a0f57, #0e0e10);
-      background-size: 100% 300%;
-      animation: backgroundScroll 10s ease-in-out infinite;
-    }
-
-    @keyframes backgroundScroll {
-      0%, 100% {
-        background-position: 0% 0%;
-      }
-      50% {
-        background-position: 0% 100%;
-      }
-    }
-
-    .wrapper {
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 2rem;
-      max-width: 1200px;
-      margin: 4rem auto 2rem;
-      padding: 0 1rem;
+      flex-direction: column;
+      background: linear-gradient(to top, #0e0e10, #2b0a3d, #0e0e10);
+      background-size: 100% 300%;
+      animation: gradientScroll 10s ease infinite;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
-    .container,
-    .guia {
-      background-color: #1f1f23;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: none;
-      min-height: 380px;
-      animation: fadeInUp 0.8s ease forwards;
+    @keyframes gradientScroll {
+      0% { background-position: 0 100%; }
+      50% { background-position: 0 0%; }
+      100% { background-position: 0 100%; }
+    }
+
+    .main-wrapper {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+      margin-top: 3rem;
     }
 
     .container {
-      flex: 1;
+      background-color: #1f1f23;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 90%;
       max-width: 500px;
+      text-align: center;
+      box-shadow: none;
+      animation: fadeInUp 0.8s ease forwards;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .guia {
-      width: 300px;
+      margin-left: 2rem;
+      background-color: #1f1f23;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 280px;
+      box-shadow: none;
+      animation: fadeInRight 1s ease forwards;
     }
 
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      color: #c084fc;
+    .footer {
+      margin: 2rem auto 1rem;
+      color: #aaa;
+      font-size: 0.85rem;
       text-align: center;
+      opacity: 0.7;
+    }
+
+    .logo {
+      max-width: 220px;
+      height: auto;
+      margin: 0 auto 1.5rem;
+      display: block;
     }
 
     input, select, textarea {
@@ -112,18 +127,6 @@
       line-height: 1.5;
     }
 
-    .footer {
-      text-align: center;
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.5);
-      padding: 1.5rem 1rem 2rem;
-    }
-
-    .footer a {
-      color: #c084fc;
-      text-decoration: none;
-    }
-
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -135,24 +138,39 @@
       }
     }
 
-    @media (max-width: 900px) {
-      .wrapper {
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        align-items: center;
+      }
+
+      .main-wrapper {
         flex-direction: column;
         align-items: center;
       }
 
-      .container, .guia {
-        max-width: 90%;
-        width: 100%;
+      .guia {
+        margin: 2rem 0 0 0;
+        width: 90%;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="wrapper">
+  <div class="main-wrapper">
     <div class="container">
-      <h1>TTS de JoanMiii</h1>
+      <img src="logo.png" alt="Logo TTS de JoanMiii" class="logo" />
       <input type="text" id="usuario" placeholder="Tu usuario de Twitch" />
       <select id="voz">
         <option value="EL:vqIbpHNnKXv33Ytdhbs2">IlloJuan</option> 
@@ -177,9 +195,7 @@
   </div>
 
   <div class="footer">
-    Herramienta creada por JoanMiii. Sigue el canal de 
-    <a href="https://www.twitch.tv/joanmiii" target="_blank">@joanmiii</a>
-    para apoyar 💜
+    Herramienta creada por JoanMiii. Sigue el canal de Twitch: <strong>@joanmiii</strong> para apoyar.
   </div>
 
   <script>
