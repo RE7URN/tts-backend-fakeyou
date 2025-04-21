@@ -37,13 +37,13 @@
 
 .guia {
   position: absolute;
-  top: 0;
-  left: calc(50% + 300px); /* justo a la derecha del centro */
-  background-color: rgba(0, 0, 0, 0.8);
+  top: 50%;
+  transform: translateY(-50%);
+  left: calc(50% + 300px); /* un poco a la derecha del panel central */
+  background-color: #1f1f23; /* Igual que el panel principal */
   padding: 2rem;
   border-radius: 1rem;
   width: 280px;
-  height: auto;
   box-shadow: none;
   animation: fadeInRight 1s ease forwards;
 }
