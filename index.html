@@ -7,9 +7,9 @@
     body {
       margin: 0;
       padding: 0;
-      background: transparent;
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
+      background: #0e0e10; /* Fondo oscuro si se abre fuera de OBS */
     }
 
     #gifHablando {
@@ -50,8 +50,8 @@
     #guia {
       position: fixed;
       top: 10%;
-      right: 0;
-      width: 300px;
+      right: 20px; /* Antes estaba en 0, ahora dejamos un pequeño margen */
+      width: 280px;
       background-color: rgba(0, 0, 0, 0.75);
       color: white;
       padding: 1rem;
@@ -76,11 +76,12 @@
       margin-bottom: 0.75rem;
     }
 
-    /* RESPONSIVE: guía se adapta en móvil */
+    /* Responsive en móviles */
     @media screen and (max-width: 768px) {
       #guia {
         width: 90%;
         left: 50%;
+        right: auto;
         transform: translateX(-50%);
         top: auto;
         bottom: 1rem;
@@ -110,11 +111,9 @@
 </head>
 <body>
 
-  <!-- GIF y mensaje -->
   <img id="gifHablando" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM5dXVzaXVtMWVncXJmbWtvbmI0MjAwanZrYnVsdndzbXdiZDhqaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FMGyadaG0ZKbxi03UB/giphy.gif" alt="GIF hablando" />
   <div id="mensajeOverlay"></div>
 
-  <!-- Guía lateral / responsive -->
   <div id="guia">
     <h2>¿Cómo usar el TTS?</h2>
     <ol>
