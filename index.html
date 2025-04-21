@@ -27,22 +27,27 @@
   width: 90%;
   max-width: 500px;
   text-align: center;
-  box-shadow: 0 0 20px rgba(128, 0, 128, 0.4);
+  box-shadow: none; /* ❌ Sin halo morado */
   animation: fadeInUp 0.8s ease forwards;
+  min-height: 380px; /* 🔒 Asegura una altura base para alinear la guía */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .guia {
   position: absolute;
-  top: 50%;
-  left: calc(50% + 300px); /* desplazado a la derecha del centro */
-  transform: translateY(-50%);
+  top: 0;
+  left: calc(50% + 300px); /* justo a la derecha del centro */
   background-color: rgba(0, 0, 0, 0.8);
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 1rem;
   width: 280px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  height: auto;
+  box-shadow: none;
   animation: fadeInRight 1s ease forwards;
 }
+
 
 h1 {
   font-size: 1.8rem;
