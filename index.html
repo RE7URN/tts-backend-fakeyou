@@ -2,152 +2,165 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TTS JoanMiii</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <title>Overlay TTS</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0e0e10;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      background: transparent;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
     }
-    .container {
-      background-color: #1f1f23;
-      padding: 2rem;
+
+    #gifHablando {
+      position: fixed;
+      bottom: 35%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      display: none;
+      z-index: 2;
+    }
+
+    #mensajeOverlay {
+      position: fixed;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      padding: 1rem 2rem;
       border-radius: 1rem;
-      box-shadow: 0 0 20px rgba(128, 0, 128, 0.4);
-      width: 90%;
-      max-width: 500px;
+      color: #fff;
+      font-size: 2rem;
+      white-space: pre-wrap;
+      text-align: center;
+      max-width: 80%;
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      z-index: 1;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    }
+
+    #mensajeOverlay.visible {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    /* Guía lateral */
+    #guia {
+      position: fixed;
+      top: 10%;
+      right: 0;
+      width: 300px;
+      background-color: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 1rem 0 0 1rem;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.4);
+      z-index: 99;
+    }
+
+    #guia h2 {
+      font-size: 1.2rem;
+      margin-top: 0;
+      color: #c084fc;
       text-align: center;
     }
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      color: #c084fc;
+
+    #guia ol {
+      padding-left: 1.2rem;
     }
-    input, select, textarea {
-      width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      background-color: #2e2e33;
-      border: 1px solid #555;
-      color: #fff;
-      border-radius: 0.5rem;
-      font-size: 1rem;
+
+    #guia li {
+      margin-bottom: 0.75rem;
     }
-    textarea {
-      resize: none;
-      height: 100px;
-    }
-    button {
-      margin-top: 1rem;
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
-      background-color: #a855f7;
-      border: none;
-      color: white;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #9333ea;
+
+    /* RESPONSIVE: guía se adapta en móvil */
+    @media screen and (max-width: 768px) {
+      #guia {
+        width: 90%;
+        left: 50%;
+        transform: translateX(-50%);
+        top: auto;
+        bottom: 1rem;
+        border-radius: 1rem;
+        font-size: 0.9rem;
+      }
+
+      #guia h2 {
+        font-size: 1rem;
+      }
+
+      #guia ol {
+        padding-left: 1rem;
+      }
+
+      #mensajeOverlay {
+        font-size: 1.5rem;
+        max-width: 95%;
+      }
+
+      #gifHablando {
+        width: 140px;
+        bottom: 40%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>TTS de JoanMiii</h1>
-    <input type="text" id="usuario" placeholder="Tu usuario de Twitch" />
-    <select id="voz">
-      <option value="EL:vqIbpHNnKXv33Ytdhbs2">IlloJuan</option> 
-      <option value="EL:wA5XnqHS6bwma6dOu6kL">ElXokas</option>
-      <option value="EL:LyhzyjSU5cIDWFSXnxvx">Dheylo</option>
-      <option value="EL:LKjU9l8WPQk4DGoxLUGN">Ibai</option>
-      <option value="EL:WqhBvLV6sdvMKp6Fh7ZI">Abascal</option>
-    </select>
-    <textarea id="mensaje" placeholder="Escribe tu mensaje aquí..."></textarea>
-    <button onclick="enviar()">Enviar mensaje</button>
+
+  <!-- GIF y mensaje -->
+  <img id="gifHablando" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM5dXVzaXVtMWVncXJmbWtvbmI0MjAwanZrYnVsdndzbXdiZDhqaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FMGyadaG0ZKbxi03UB/giphy.gif" alt="GIF hablando" />
+  <div id="mensajeOverlay"></div>
+
+  <!-- Guía lateral / responsive -->
+  <div id="guia">
+    <h2>¿Cómo usar el TTS?</h2>
+    <ol>
+      <li>Canjea la recompensa "TTS" en el canal de Twitch.</li>
+      <li>Escribe tu nombre de usuario en minúsculas.</li>
+      <li>Elige la voz que prefieras.</li>
+      <li>Escribe tu mensaje y envíalo.</li>
+    </ol>
   </div>
 
   <script>
-    const BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
+    const overlayDiv = document.getElementById("mensajeOverlay");
+    const gif = document.getElementById("gifHablando");
 
-    async function verificarUsuario(username) {
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`);
-        const data = await res.json();
-        return data.allowed;
-      } catch (err) {
-        console.error("❌ Error en verificarUsuario:", err);
-        return false;
-      }
-    }
+    const ws = new WebSocket("wss://ttsfakeyou-joanmibackend-oauth.up.railway.app");
 
-    async function consumirPermiso(username) {
+    ws.onopen = () => {
+      console.log("🟢 Conectado al WebSocket del overlay");
+    };
+
+    ws.onmessage = async (event) => {
       try {
-        await fetch(`${BACKEND_URL}/api/consume/${username}`, {
-          method: "POST"
+        const data = JSON.parse(event.data);
+        const { text, audioUrl } = data;
+
+        overlayDiv.textContent = text;
+        overlayDiv.classList.add("visible");
+        gif.style.display = "block";
+
+        const audio = new Audio(audioUrl);
+        audio.volume = 1.0;
+        audio.play();
+
+        audio.addEventListener("ended", () => {
+          overlayDiv.classList.remove("visible");
+          gif.style.display = "none";
+          overlayDiv.textContent = "";
         });
-      } catch (err) {
-        console.error("⚠️ Error al consumir permiso:", err);
+      } catch (e) {
+        console.error("❌ Error procesando el mensaje del WebSocket:", e);
       }
-    }
+    };
 
-    async function enviarMensaje(username, voice, message) {
-      try {
-        const endpoint = "/api/tts";
-
-        const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, voice, message })
-        });
-
-        if (res.ok) {
-          // No se reproduce el audio en el navegador, solo se manda al overlay
-          return true;
-        } else {
-          console.error("❌ Error al generar TTS:", await res.text());
-          return false;
-        }
-      } catch (err) {
-        console.error("❌ Error en enviarMensaje:", err);
-        return false;
-      }
-    }
-
-    async function enviar() {
-      const username = document.getElementById("usuario").value.trim().toLowerCase();
-      const message = document.getElementById("mensaje").value;
-      const voice = document.getElementById("voz").value;
-
-      if (!username || !message) {
-        alert("Por favor, rellena todos los campos.");
-        return;
-      }
-
-      const permitido = await verificarUsuario(username);
-      if (!permitido) {
-        alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
-        return;
-      }
-
-      const enviado = await enviarMensaje(username, voice, message);
-      if (enviado) {
-        alert("✅ Mensaje enviado con éxito");
-        await consumirPermiso(username);
-      } else {
-        alert("❌ Hubo un error al enviar tu mensaje");
-      }
-    }
+    ws.onerror = (error) => {
+      console.error("❌ Error WebSocket:", error);
+    };
   </script>
 </body>
 </html>
