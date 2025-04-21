@@ -14,10 +14,10 @@
 
     #gifHablando {
       position: fixed;
-      bottom: 35%;
+      bottom: 20%;
       left: 50%;
       transform: translateX(-50%);
-      width: 180px;
+      width: 150px;
       display: none;
       z-index: 2;
     }
@@ -27,103 +27,25 @@
       bottom: 15%;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.6);
-      padding: 1rem 2rem;
-      border-radius: 1rem;
-      color: #fff;
-      font-size: 2rem;
+      color: white;
+      font-size: 1.8rem;
       white-space: pre-wrap;
       text-align: center;
-      max-width: 80%;
+      max-width: 90%;
       opacity: 0;
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition: opacity 0.3s ease;
       z-index: 1;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
     }
 
     #mensajeOverlay.visible {
       opacity: 1;
-      transform: translateX(-50%) scale(1.05);
-    }
-
-    /* Guía lateral */
-    #guia {
-      position: fixed;
-      top: 10%;
-      right: 0;
-      width: 300px;
-      background-color: rgba(0, 0, 0, 0.75);
-      color: white;
-      padding: 1rem;
-      font-size: 1rem;
-      border-radius: 1rem 0 0 1rem;
-      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.4);
-      z-index: 99;
-    }
-
-    #guia h2 {
-      font-size: 1.2rem;
-      margin-top: 0;
-      color: #c084fc;
-      text-align: center;
-    }
-
-    #guia ol {
-      padding-left: 1.2rem;
-    }
-
-    #guia li {
-      margin-bottom: 0.75rem;
-    }
-
-    /* RESPONSIVE: guía se adapta en móvil */
-    @media screen and (max-width: 768px) {
-      #guia {
-        width: 90%;
-        left: 50%;
-        transform: translateX(-50%);
-        top: auto;
-        bottom: 1rem;
-        border-radius: 1rem;
-        font-size: 0.9rem;
-      }
-
-      #guia h2 {
-        font-size: 1rem;
-      }
-
-      #guia ol {
-        padding-left: 1rem;
-      }
-
-      #mensajeOverlay {
-        font-size: 1.5rem;
-        max-width: 95%;
-      }
-
-      #gifHablando {
-        width: 140px;
-        bottom: 40%;
-      }
     }
   </style>
 </head>
 <body>
 
-  <!-- GIF y mensaje -->
   <img id="gifHablando" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM5dXVzaXVtMWVncXJmbWtvbmI0MjAwanZrYnVsdndzbXdiZDhqaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FMGyadaG0ZKbxi03UB/giphy.gif" alt="GIF hablando" />
   <div id="mensajeOverlay"></div>
-
-  <!-- Guía lateral / responsive -->
-  <div id="guia">
-    <h2>¿Cómo usar el TTS?</h2>
-    <ol>
-      <li>Canjea la recompensa "TTS" en el canal de Twitch.</li>
-      <li>Escribe tu nombre de usuario en minúsculas.</li>
-      <li>Elige la voz que prefieras.</li>
-      <li>Escribe tu mensaje y envíalo.</li>
-    </ol>
-  </div>
 
   <script>
     const overlayDiv = document.getElementById("mensajeOverlay");
@@ -140,6 +62,7 @@
         const data = JSON.parse(event.data);
         const { text, audioUrl } = data;
 
+        // Mostrar mensaje y GIF
         overlayDiv.textContent = text;
         overlayDiv.classList.add("visible");
         gif.style.display = "block";
