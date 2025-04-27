@@ -28,6 +28,16 @@
       100% { background-position: 0 100%; }
     }
 
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInRight {
+      0% { opacity: 0; transform: translateX(30px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+
     .main-wrapper {
       display: flex;
       flex-direction: row;
@@ -38,34 +48,32 @@
     }
 
     .container {
-  background-color: #1f1f23;
-  padding: 2rem;
-  border-radius: 0.3rem;
-  width: 90%;
-  max-width: 500px;
-  text-align: center;
-  box-shadow: none;
-  animation: fadeInUp 0.8s ease forwards;
-  min-height: 450px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  opacity: 0; /* <-- Añadir esto */
-  animation-fill-mode: forwards; /* <-- Añadir esto */
-}
+      background-color: #1f1f23;
+      padding: 2rem;
+      border-radius: 0.3rem;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: none;
+      min-height: 450px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
 
-.guia {
-  margin-left: 2rem;
-  background-color: #1f1f23;
-  padding: 2rem;
-  border-radius: 0.3rem;
-  width: 280px;
-  box-shadow: none;
-  animation: fadeInRight 1s ease forwards;
-  color: white;
-  opacity: 0; /* <-- Añadir esto */
-  animation-fill-mode: forwards; /* <-- Añadir esto */
-}
+    .guia {
+      margin-left: 2rem;
+      background-color: #1f1f23;
+      padding: 2rem;
+      border-radius: 0.3rem;
+      width: 280px;
+      box-shadow: none;
+      color: white;
+      opacity: 0;
+      animation: fadeInRight 1s ease forwards;
+    }
 
     .footer {
       margin: 2rem auto 1rem;
