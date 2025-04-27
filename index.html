@@ -164,23 +164,27 @@
     }
 
     .voice-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 1rem 0;
-      justify-content: center;
-    }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 1rem 0;
+  justify-items: center;
+}
 
-    .voice-buttons button {
-      background-color: #2e2e33;
-      border: 1px solid #555;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
+
+.voice-buttons button {
+  background-color: #2e2e33;
+  border: 1px solid #555;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-align: center;
+}
+
 
     .voice-buttons button:hover {
       background-color: #9333ea;
