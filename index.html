@@ -291,12 +291,12 @@
 
     ttsInput.addEventListener('input', () => {
       const length = ttsInput.value.length;
-      charCount.textContent = `${length} / 1500`;
+      charCount.textContent = `${length} / 500`;
 
-      if (length >= 1500) {
+      if (length >= 500) {
         charCount.style.color = 'red';
         charWarning.classList.add('visible');
-      } else if (length >= 1400) {
+      } else if (length >= 450) {
         charCount.style.color = 'orange';
         charWarning.classList.remove('visible');
       } else {
