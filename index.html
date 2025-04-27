@@ -46,7 +46,7 @@
       text-align: center;
       box-shadow: none;
       animation: fadeInUp 0.8s ease forwards;
-      min-height: 400px;
+      min-height: 450px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -78,7 +78,7 @@
       display: block;
     }
 
-    input, select, textarea {
+    input, textarea {
       width: 100%;
       padding: 0.75rem;
       margin: 0.5rem 0;
@@ -163,16 +163,56 @@
       opacity: 1;
     }
 
+    .voice-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 1rem 0;
+      justify-content: center;
+    }
+
+    .voice-buttons button {
+      background-color: #2e2e33;
+      border: 1px solid #555;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .voice-buttons button:hover {
+      background-color: #9333ea;
+      transform: scale(1.05);
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .voice-buttons button.selected {
+      background-color: #a855f7;
+      border: 1px solid #a855f7;
+      animation: pulse 0.4s ease;
+    }
+
     @media (max-width: 768px) {
       body {
         align-items: center;
       }
-
       .main-wrapper {
         flex-direction: column;
         align-items: center;
       }
-
       .guia {
         margin: 2rem 0 0 0;
         width: 90%;
@@ -187,15 +227,16 @@
     <div class="container">
       <img src="logo.png" alt="Logo TTS de JoanMiii" class="logo" />
       <input type="text" id="usuario" placeholder="Tu usuario de Twitch" />
-      <select id="voz">
-        <option value="EL:vqIbpHNnKXv33Ytdhbs2">IlloJuan</option> 
-        <option value="EL:wA5XnqHS6bwma6dOu6kL">ElXokas</option>
-        <option value="EL:LyhzyjSU5cIDWFSXnxvx">Dheylo</option>
-        <option value="EL:LKjU9l8WPQk4DGoxLUGN">Ibai</option>
-        <option value="EL:WqhBvLV6sdvMKp6Fh7ZI">Abascal</option>
-      </select>
+      
+      <!-- Botones de voz -->
+      <div id="botones-voz" class="voice-buttons">
+        <button type="button" data-voz="EL:vqIbpHNnKXv33Ytdhbs2">IlloJuan</button>
+        <button type="button" data-voz="EL:wA5XnqHS6bwma6dOu6kL">ElXokas</button>
+        <button type="button" data-voz="EL:LyhzyjSU5cIDWFSXnxvx">Dheylo</button>
+        <button type="button" data-voz="EL:LKjU9l8WPQk4DGoxLUGN">Ibai</button>
+        <button type="button" data-voz="EL:WqhBvLV6sdvMKp6Fh7ZI">Abascal</button>
+      </div>
 
-      <!-- TEXTAREA con contador -->
       <textarea id="mensaje" maxlength="500" placeholder="Escribe tu mensaje aquí..."></textarea>
       <div id="char-count">0 / 500</div>
       <div id="char-warning" class="warning">¡Has llegado al límite máximo de caracteres!</div>
@@ -221,6 +262,16 @@
 
   <script>
     const BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
+
+    let vozSeleccionada = null;
+
+    document.querySelectorAll('#botones-voz button').forEach(boton => {
+      boton.addEventListener('click', () => {
+        document.querySelectorAll('#botones-voz button').forEach(b => b.classList.remove('selected'));
+        boton.classList.add('selected');
+        vozSeleccionada = boton.getAttribute('data-voz');
+      });
+    });
 
     async function verificarUsuario(username) {
       try {
@@ -260,46 +311,41 @@
     }
 
     async function enviar() {
-  const username = document.getElementById("usuario").value.trim().toLowerCase();
-  const message = document.getElementById("mensaje").value;
-  const voice = document.getElementById("voz").value;
-  const botonEnviar = document.querySelector('button[onclick="enviar()"]');
+      const username = document.getElementById("usuario").value.trim().toLowerCase();
+      const message = document.getElementById("mensaje").value;
+      const botonEnviar = document.querySelector('button[onclick="enviar()"]');
 
-  if (!username || !message) {
-    alert("Por favor, rellena todos los campos.");
-    return;
-  }
+      if (!username || !message || !vozSeleccionada) {
+        alert("Por favor, rellena todos los campos y selecciona una voz.");
+        return;
+      }
 
-  // 🔴 Desactiva botón y cambia texto
-  botonEnviar.disabled = true;
-  botonEnviar.textContent = "Enviando...";
+      botonEnviar.disabled = true;
+      botonEnviar.textContent = "Enviando...";
 
-  try {
-    const permitido = await verificarUsuario(username);
-    if (!permitido) {
-      alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
-      return;
+      try {
+        const permitido = await verificarUsuario(username);
+        if (!permitido) {
+          alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
+          return;
+        }
+
+        const enviado = await enviarMensaje(username, vozSeleccionada, message);
+        if (enviado) {
+          alert("✅ Mensaje enviado con éxito");
+          await consumirPermiso(username);
+        } else {
+          alert("❌ Hubo un error al enviar tu mensaje");
+        }
+      } catch (error) {
+        console.error("⚠️ Error en enviar:", error);
+        alert("❌ Error inesperado al enviar.");
+      } finally {
+        botonEnviar.disabled = false;
+        botonEnviar.textContent = "Enviar mensaje";
+      }
     }
 
-    const enviado = await enviarMensaje(username, voice, message);
-    if (enviado) {
-      alert("✅ Mensaje enviado con éxito");
-      await consumirPermiso(username);
-    } else {
-      alert("❌ Hubo un error al enviar tu mensaje");
-    }
-  } catch (error) {
-    console.error("⚠️ Error en enviar:", error);
-    alert("❌ Error inesperado al enviar.");
-  } finally {
-    // 🟢 Reactiva botón y vuelve a texto normal
-    botonEnviar.disabled = false;
-    botonEnviar.textContent = "Enviar mensaje";
-  }
-}
-
-
-    // Sistema de contador y advertencia
     const ttsInput = document.getElementById('mensaje');
     const charCount = document.getElementById('char-count');
     const charWarning = document.getElementById('char-warning');
