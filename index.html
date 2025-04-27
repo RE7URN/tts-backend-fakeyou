@@ -6,6 +6,7 @@
   <title>TTS JoanMiii</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <style>
+    /* Tu CSS principal */
     body {
       margin: 0;
       padding: 0;
@@ -111,7 +112,10 @@
       background-color: #9333ea;
     }
 
-    textarea { resize: none; height: 100px; }
+    textarea {
+      resize: none;
+      height: 100px;
+    }
 
     .voice-buttons {
       display: grid;
@@ -193,27 +197,25 @@
       color: #c084fc;
     }
 
+    /* ✅ Corregido el toast */
     #toast {
-  position: fixed;
-  top: 20px;
-  left: 45%;
-  transform: translateX(-50%);
-  background-color: #ff000085;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 1rem;
-  opacity: 0;
-  z-index: 9999;
-  transition: opacity 0.5s ease; /* 🎯 SOLO animamos la opacidad */
-  pointer-events: none; /* Evita que se pueda clicar mientras aparece/desaparece */
-}
-
-
+      position: fixed;
+      top: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ff0000;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      opacity: 0;
+      z-index: 9999;
+      transition: opacity 0.5s ease; /* Solo animar opacidad */
+      pointer-events: none;
+    }
 
     #toast.show {
       opacity: 1;
-      transform: translateY(0);
     }
 
     @media (max-width: 768px) {
@@ -259,7 +261,7 @@
 </div>
 
 <div class="footer">
-  Herramienta creada por JoanMiii. Sigue el canal de Twitch: 
+  Herramienta creada por JoanMiii. Sigue el canal de Twitch:
   <a href="https://www.twitch.tv/joanmiii" target="_blank" style="color: #c084fc; text-decoration: none;"><strong>@joanmiii</strong></a>
 </div>
 
@@ -273,8 +275,8 @@ const toast = document.getElementById('toast');
 
 function showToast(message) {
   toast.textContent = message;
-  toast.className = 'show';
-  setTimeout(() => toast.className = toast.className.replace('show', ''), 2500);
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
 document.querySelectorAll('#botones-voz button').forEach(boton => {
