@@ -46,23 +46,22 @@
       text-align: center;
       box-shadow: none;
       animation: fadeInUp 0.8s ease forwards;
-      min-height: 380px;
+      min-height: 400px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
     .guia {
-  margin-left: 2rem;
-  background-color: #1f1f23;
-  padding: 2rem;
-  border-radius: 1rem;
-  width: 280px;
-  box-shadow: none;
-  animation: fadeInRight 1s ease forwards;
-  color: white; /* ✅ Esto asegura que el texto se vea bien */
-}
-
+      margin-left: 2rem;
+      background-color: #1f1f23;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 280px;
+      box-shadow: none;
+      animation: fadeInRight 1s ease forwards;
+      color: white;
+    }
 
     .footer {
       margin: 2rem auto 1rem;
@@ -151,6 +150,19 @@
       }
     }
 
+    .warning {
+      color: red;
+      margin-top: 5px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      height: 20px;
+      font-size: 0.9rem;
+    }
+
+    .warning.visible {
+      opacity: 1;
+    }
+
     @media (max-width: 768px) {
       body {
         align-items: center;
@@ -168,6 +180,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="main-wrapper">
@@ -181,7 +194,12 @@
         <option value="EL:LKjU9l8WPQk4DGoxLUGN">Ibai</option>
         <option value="EL:WqhBvLV6sdvMKp6Fh7ZI">Abascal</option>
       </select>
-      <textarea id="mensaje" placeholder="Escribe tu mensaje aquí..."></textarea>
+
+      <!-- TEXTAREA con contador -->
+      <textarea id="mensaje" maxlength="1500" placeholder="Escribe tu mensaje aquí..."></textarea>
+      <div id="char-count">0 / 1500</div>
+      <div id="char-warning" class="warning">¡Has llegado al límite máximo de caracteres!</div>
+
       <button onclick="enviar()">Enviar mensaje</button>
     </div>
 
@@ -265,6 +283,27 @@
         alert("❌ Hubo un error al enviar tu mensaje");
       }
     }
+
+    // Sistema de contador y advertencia
+    const ttsInput = document.getElementById('mensaje');
+    const charCount = document.getElementById('char-count');
+    const charWarning = document.getElementById('char-warning');
+
+    ttsInput.addEventListener('input', () => {
+      const length = ttsInput.value.length;
+      charCount.textContent = `${length} / 1500`;
+
+      if (length >= 1500) {
+        charCount.style.color = 'red';
+        charWarning.classList.add('visible');
+      } else if (length >= 1400) {
+        charCount.style.color = 'orange';
+        charWarning.classList.remove('visible');
+      } else {
+        charCount.style.color = 'white';
+        charWarning.classList.remove('visible');
+      }
+    });
   </script>
 </body>
 </html>
