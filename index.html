@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TTS JoanMiii</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <style>
@@ -47,31 +47,30 @@
       margin-top: 3rem;
     }
 
-    .container {
+    .container, .guia {
       background-color: #1f1f23;
       padding: 2rem;
       border-radius: 0.3rem;
+      box-shadow: none;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+
+    .container {
       width: 90%;
       max-width: 500px;
       text-align: center;
-      box-shadow: none;
       min-height: 450px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      opacity: 0;
       animation: fadeInUp 0.8s ease forwards;
     }
 
     .guia {
       margin-left: 2rem;
-      background-color: #1f1f23;
-      padding: 2rem;
-      border-radius: 0.3rem;
       width: 280px;
-      box-shadow: none;
       color: white;
-      opacity: 0;
       animation: fadeInRight 1s ease forwards;
     }
 
@@ -90,7 +89,7 @@
       display: block;
     }
 
-    input, textarea {
+    input, textarea, button {
       width: 100%;
       padding: 0.75rem;
       margin: 0.5rem 0;
@@ -101,20 +100,9 @@
       font-size: 1rem;
     }
 
-    textarea {
-      resize: none;
-      height: 100px;
-    }
-
     button {
-      margin-top: 1rem;
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
       background-color: #a855f7;
       border: none;
-      color: white;
-      border-radius: 0.3rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
@@ -122,6 +110,8 @@
     button:hover {
       background-color: #9333ea;
     }
+
+    textarea { resize: none; height: 100px; }
 
     .voice-buttons {
       display: grid;
@@ -134,17 +124,11 @@
     .voice-buttons button {
       background-color: #2e2e33;
       border: 1px solid #555;
-      color: white;
-      padding: 0.5rem;
-      border-radius: 0.3rem;
-      font-size: 0.9rem;
-      width: 100%;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      text-align: left;
       display: flex;
       align-items: center;
       gap: 10px;
+      text-align: left;
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
     .voice-buttons button img {
@@ -154,8 +138,10 @@
       object-fit: cover;
     }
 
-    .voice-buttons button span {
-      flex-grow: 1;
+    .voice-buttons button.selected {
+      background-color: #a855f7;
+      border: 1px solid #a855f7;
+      animation: pulse 0.4s ease;
     }
 
     .voice-buttons button:hover {
@@ -169,12 +155,6 @@
       100% { transform: scale(1); }
     }
 
-    .voice-buttons button.selected {
-      background-color: #a855f7;
-      border: 1px solid #a855f7;
-      animation: pulse 0.4s ease;
-    }
-
     .warning {
       color: red;
       margin-top: 5px;
@@ -184,36 +164,53 @@
       font-size: 0.9rem;
     }
 
-    .warning.visible {
-      opacity: 1;
-    }
-    
+    .warning.visible { opacity: 1; }
+
     .guia-imagen {
       display: block;
       max-width: 180px;
       margin: 0 auto 1rem auto;
     }
-    
+
     .guia ol {
-  padding-left: 1rem;
-  margin-top: 1.5rem;
-  list-style: none;
-}
+      padding-left: 1rem;
+      margin-top: 1.5rem;
+      list-style: none;
+    }
 
-.guia li {
-  margin-bottom: 1.2rem;
-  padding-left: 1.5rem;
-  position: relative;
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
+    .guia li {
+      margin-bottom: 1.2rem;
+      padding-left: 1.5rem;
+      position: relative;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
 
-.guia li::before {
-  content: '🔹';
-  position: absolute;
-  left: 0;
-  color: #c084fc;
-}
+    .guia li::before {
+      content: '🔹';
+      position: absolute;
+      left: 0;
+      color: #c084fc;
+    }
+
+    #toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #333;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      z-index: 1000;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     @media (max-width: 768px) {
       body { align-items: center; }
@@ -230,34 +227,13 @@
     <input type="text" id="usuario" placeholder="Tu usuario de Twitch" />
 
     <div id="botones-voz" class="voice-buttons">
-      <button type="button" data-voz="EL:vqIbpHNnKXv33Ytdhbs2">
-        <img src="/img/illojuan.png" alt="IlloJuan">
-        <span>IlloJuan</span>
-      </button>
-      <button type="button" data-voz="EL:wA5XnqHS6bwma6dOu6kL">
-        <img src="/img/elxokas.png" alt="ElXokas">
-        <span>ElXokas</span>
-      </button>
-      <button type="button" data-voz="EL:LyhzyjSU5cIDWFSXnxvx">
-        <img src="/img/dheylo.png" alt="Dheylo">
-        <span>Dheylo</span>
-      </button>
-      <button type="button" data-voz="EL:siUHZUnSy0pJLhpcDQUa">
-        <img src="/img/dross.png" alt="Dross">
-        <span>Dross</span>
-      </button>
-      <button type="button" data-voz="EL:LKjU9l8WPQk4DGoxLUGN">
-        <img src="/img/ibai.png" alt="Ibai">
-        <span>Ibai</span>
-      </button>
-      <button type="button" data-voz="EL:WqhBvLV6sdvMKp6Fh7ZI">
-        <img src="/img/abascal.png" alt="Abascal">
-        <span>Abascal</span>
-      </button>
-      <button type="button" data-voz="EL:w6LwinWM0eIzohovC0r8">
-        <img src="/img/elrubius.png" alt="Rubius">
-        <span>Rubius</span>
-      </button>
+      <button type="button" data-voz="EL:vqIbpHNnKXv33Ytdhbs2"><img src="/img/illojuan.png"><span>IlloJuan</span></button>
+      <button type="button" data-voz="EL:wA5XnqHS6bwma6dOu6kL"><img src="/img/elxokas.png"><span>ElXokas</span></button>
+      <button type="button" data-voz="EL:LyhzyjSU5cIDWFSXnxvx"><img src="/img/dheylo.png"><span>Dheylo</span></button>
+      <button type="button" data-voz="EL:siUHZUnSy0pJLhpcDQUa"><img src="/img/dross.png"><span>Dross</span></button>
+      <button type="button" data-voz="EL:LKjU9l8WPQk4DGoxLUGN"><img src="/img/ibai.png"><span>Ibai</span></button>
+      <button type="button" data-voz="EL:WqhBvLV6sdvMKp6Fh7ZI"><img src="/img/abascal.png"><span>Abascal</span></button>
+      <button type="button" data-voz="EL:w6LwinWM0eIzohovC0r8"><img src="/img/elrubius.png"><span>Rubius</span></button>
     </div>
 
     <textarea id="mensaje" maxlength="500" placeholder="Escribe tu mensaje aquí..."></textarea>
@@ -280,12 +256,22 @@
 
 <div class="footer">
   Herramienta creada por JoanMiii. Sigue el canal de Twitch: 
-  <a href="https://www.twitch.tv/joanmiii" target="_blank" style="color: #c084fc; text-decoration: none;"><strong>@joanmiii</strong></a> para apoyar.
+  <a href="https://www.twitch.tv/joanmiii" target="_blank" style="color: #c084fc; text-decoration: none;"><strong>@joanmiii</strong></a>
 </div>
+
+<div id="toast"></div>
 
 <script>
 const BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
 let vozSeleccionada = null;
+
+const toast = document.getElementById('toast');
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.className = 'show';
+  setTimeout(() => toast.className = toast.className.replace('show', ''), 2500);
+}
 
 document.querySelectorAll('#botones-voz button').forEach(boton => {
   boton.addEventListener('click', () => {
@@ -335,7 +321,7 @@ async function enviar() {
   const botonEnviar = document.querySelector('button[onclick="enviar()"]');
 
   if (!username || !message || !vozSeleccionada) {
-    alert("Por favor, rellena todos los campos y selecciona una voz.");
+    showToast("Por favor, completa todos los campos.");
     return;
   }
 
@@ -345,20 +331,20 @@ async function enviar() {
   try {
     const permitido = await verificarUsuario(username);
     if (!permitido) {
-      alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
+      showToast("No estás autorizado. Canjea la recompensa 'TTS' primero.");
       return;
     }
 
     const enviado = await enviarMensaje(username, vozSeleccionada, message);
     if (enviado) {
-      alert("✅ Mensaje enviado con éxito");
+      showToast("✅ Mensaje enviado correctamente");
       await consumirPermiso(username);
     } else {
-      alert("❌ Hubo un error al enviar tu mensaje");
+      showToast("❌ Error al enviar tu mensaje");
     }
   } catch (error) {
-    console.error("⚠️ Error en enviar:", error);
-    alert("❌ Error inesperado al enviar.");
+    console.error("⚠️ Error inesperado en enviar:", error);
+    showToast("❌ Error inesperado en enviar");
   } finally {
     botonEnviar.disabled = false;
     botonEnviar.textContent = "Enviar mensaje";
