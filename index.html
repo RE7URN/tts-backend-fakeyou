@@ -195,18 +195,20 @@
 
     #toast {
   position: fixed;
-  top: 20px; /* ✅ Sale arriba de la pantalla */
-  left: 45%; /* ✅ Centrado horizontalmente */
-  transform: translateX(-50%); /* ✅ Solo lo movemos en horizontal */
-  background-color: #cf0303b6;
+  top: 20px;
+  left: 45%;
+  transform: translateX(-50%);
+  background-color: #ff000085;
   color: white;
   padding: 12px 24px;
   border-radius: 8px;
   font-size: 1rem;
   opacity: 0;
   z-index: 9999;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease; /* 🎯 SOLO animamos la opacidad */
+  pointer-events: none; /* Evita que se pueda clicar mientras aparece/desaparece */
 }
+
 
 
     #toast.show {
