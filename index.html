@@ -260,29 +260,44 @@
     }
 
     async function enviar() {
-      const username = document.getElementById("usuario").value.trim().toLowerCase();
-      const message = document.getElementById("mensaje").value;
-      const voice = document.getElementById("voz").value;
+  const username = document.getElementById("usuario").value.trim().toLowerCase();
+  const message = document.getElementById("mensaje").value;
+  const voice = document.getElementById("voz").value;
+  const botonEnviar = document.querySelector('button[onclick="enviar()"]');
 
-      if (!username || !message) {
-        alert("Por favor, rellena todos los campos.");
-        return;
-      }
+  if (!username || !message) {
+    alert("Por favor, rellena todos los campos.");
+    return;
+  }
 
-      const permitido = await verificarUsuario(username);
-      if (!permitido) {
-        alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
-        return;
-      }
+  // 🔴 Desactiva botón y cambia texto
+  botonEnviar.disabled = true;
+  botonEnviar.textContent = "Enviando...";
 
-      const enviado = await enviarMensaje(username, voice, message);
-      if (enviado) {
-        alert("✅ Mensaje enviado con éxito");
-        await consumirPermiso(username);
-      } else {
-        alert("❌ Hubo un error al enviar tu mensaje");
-      }
+  try {
+    const permitido = await verificarUsuario(username);
+    if (!permitido) {
+      alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
+      return;
     }
+
+    const enviado = await enviarMensaje(username, voice, message);
+    if (enviado) {
+      alert("✅ Mensaje enviado con éxito");
+      await consumirPermiso(username);
+    } else {
+      alert("❌ Hubo un error al enviar tu mensaje");
+    }
+  } catch (error) {
+    console.error("⚠️ Error en enviar:", error);
+    alert("❌ Error inesperado al enviar.");
+  } finally {
+    // 🟢 Reactiva botón y vuelve a texto normal
+    botonEnviar.disabled = false;
+    botonEnviar.textContent = "Enviar mensaje";
+  }
+}
+
 
     // Sistema de contador y advertencia
     const ttsInput = document.getElementById('mensaje');
