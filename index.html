@@ -111,43 +111,56 @@
       background-color: #9333ea;
     }
 
-    .guia h2 {
-      margin-top: 0;
-      font-size: 1.2rem;
-      color: #c084fc;
-      text-align: center;
+    .voice-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 1rem 0;
+      justify-items: center;
     }
 
-    .guia ol {
-      padding-left: 1.2rem;
-      margin-top: 1rem;
+    .voice-buttons button {
+      background-color: #2e2e33;
+      border: 1px solid #555;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .guia li {
-      margin-bottom: 0.75rem;
-      line-height: 1.5;
+    .voice-buttons button img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .voice-buttons button span {
+      flex-grow: 1;
     }
 
-    @keyframes fadeInRight {
-      from {
-        opacity: 0;
-        transform: translateX(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
+    .voice-buttons button:hover {
+      background-color: #9333ea;
+      transform: scale(1.05);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .voice-buttons button.selected {
+      background-color: #a855f7;
+      border: 1px solid #a855f7;
+      animation: pulse 0.4s ease;
     }
 
     .warning {
@@ -163,212 +176,168 @@
       opacity: 1;
     }
 
-    .voice-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
-  margin: 1rem 0;
-  justify-items: center;
-}
-
-
-.voice-buttons button {
-  background-color: #2e2e33;
-  border: 1px solid #555;
-  color: white;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  font-size: 0.9rem;
-  width: 100%;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  text-align: center;
-}
-
-
-    .voice-buttons button:hover {
-      background-color: #9333ea;
-      transform: scale(1.05);
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.1);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    .voice-buttons button.selected {
-      background-color: #a855f7;
-      border: 1px solid #a855f7;
-      animation: pulse 0.4s ease;
-    }
-
     @media (max-width: 768px) {
-      body {
-        align-items: center;
-      }
-      .main-wrapper {
-        flex-direction: column;
-        align-items: center;
-      }
-      .guia {
-        margin: 2rem 0 0 0;
-        width: 90%;
-      }
+      body { align-items: center; }
+      .main-wrapper { flex-direction: column; align-items: center; }
+      .guia { margin: 2rem 0 0 0; width: 90%; }
     }
   </style>
 </head>
-
 <body>
 
-  <div class="main-wrapper">
-    <div class="container">
-      <img src="logo.png" alt="Logo TTS de JoanMiii" class="logo" />
-      <input type="text" id="usuario" placeholder="Tu usuario de Twitch" />
-      
-      <!-- Botones de voz -->
-      <div id="botones-voz" class="voice-buttons">
-        <button type="button" data-voz="EL:vqIbpHNnKXv33Ytdhbs2">IlloJuan</button>
-        <button type="button" data-voz="EL:wA5XnqHS6bwma6dOu6kL">ElXokas</button>
-        <button type="button" data-voz="EL:LyhzyjSU5cIDWFSXnxvx">Dheylo</button>
-        <button type="button" data-voz="EL:LKjU9l8WPQk4DGoxLUGN">Ibai</button>
-        <button type="button" data-voz="EL:WqhBvLV6sdvMKp6Fh7ZI">Abascal</button>
-      </div>
+<div class="main-wrapper">
+  <div class="container">
+    <img src="logo.png" alt="Logo TTS de JoanMiii" class="logo" />
+    <input type="text" id="usuario" placeholder="Tu usuario de Twitch" />
 
-      <textarea id="mensaje" maxlength="500" placeholder="Escribe tu mensaje aquí..."></textarea>
-      <div id="char-count">0 / 500</div>
-      <div id="char-warning" class="warning">¡Has llegado al límite máximo de caracteres!</div>
-
-      <button onclick="enviar()">Enviar mensaje</button>
+    <div id="botones-voz" class="voice-buttons">
+      <button type="button" data-voz="EL:vqIbpHNnKXv33Ytdhbs2">
+        <img src="/img/illojuan.png" alt="IlloJuan">
+        <span>IlloJuan</span>
+      </button>
+      <button type="button" data-voz="EL:wA5XnqHS6bwma6dOu6kL">
+        <img src="/img/elxokas.png" alt="ElXokas">
+        <span>ElXokas</span>
+      </button>
+      <button type="button" data-voz="EL:LyhzyjSU5cIDWFSXnxvx">
+        <img src="/img/dheylo.png" alt="Dheylo">
+        <span>Dheylo</span>
+      </button>
+      <button type="button" data-voz="EL:LKjU9l8WPQk4DGoxLUGN">
+        <img src="/img/ibai.png" alt="Ibai">
+        <span>Ibai</span>
+      </button>
+      <button type="button" data-voz="EL:WqhBvLV6sdvMKp6Fh7ZI">
+        <img src="/img/abascal.png" alt="Abascal">
+        <span>Abascal</span>
+      </button>
     </div>
 
-    <div class="guia">
-      <h2>¿Cómo usar el TTS?</h2>
-      <ol>
-        <li>Canjea la recompensa "TTS" en el canal de Twitch.</li>
-        <li>Escribe tu nombre de usuario en minúsculas.</li>
-        <li>Elige la voz que prefieras.</li>
-        <li>Escribe tu mensaje y haz clic en enviar.</li>
-      </ol>
-    </div>
+    <textarea id="mensaje" maxlength="500" placeholder="Escribe tu mensaje aquí..."></textarea>
+    <div id="char-count">0 / 500</div>
+    <div id="char-warning" class="warning">¡Has llegado al límite máximo de caracteres!</div>
+
+    <button onclick="enviar()">Enviar mensaje</button>
   </div>
 
-  <div class="footer">
-    Herramienta creada por JoanMiii. Sigue el canal de Twitch: 
-    <a href="https://www.twitch.tv/joanmiii" target="_blank" style="color: #c084fc; text-decoration: none;"><strong>@joanmiii</strong></a> para apoyar.
+  <div class="guia">
+    <h2>¿Cómo usar el TTS?</h2>
+    <ol>
+      <li>Canjea la recompensa "TTS" en el canal de Twitch.</li>
+      <li>Escribe tu nombre de usuario en minúsculas.</li>
+      <li>Elige la voz que prefieras.</li>
+      <li>Escribe tu mensaje y haz clic en enviar.</li>
+    </ol>
   </div>
+</div>
 
-  <script>
-    const BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
+<div class="footer">
+  Herramienta creada por JoanMiii. Sigue el canal de Twitch: 
+  <a href="https://www.twitch.tv/joanmiii" target="_blank" style="color: #c084fc; text-decoration: none;"><strong>@joanmiii</strong></a> para apoyar.
+</div>
 
-    let vozSeleccionada = null;
+<script>
+const BACKEND_URL = "https://ttsfakeyou-joanmibackend-oauth.up.railway.app";
+let vozSeleccionada = null;
 
-    document.querySelectorAll('#botones-voz button').forEach(boton => {
-      boton.addEventListener('click', () => {
-        document.querySelectorAll('#botones-voz button').forEach(b => b.classList.remove('selected'));
-        boton.classList.add('selected');
-        vozSeleccionada = boton.getAttribute('data-voz');
-      });
+document.querySelectorAll('#botones-voz button').forEach(boton => {
+  boton.addEventListener('click', () => {
+    document.querySelectorAll('#botones-voz button').forEach(b => b.classList.remove('selected'));
+    boton.classList.add('selected');
+    vozSeleccionada = boton.getAttribute('data-voz');
+  });
+});
+
+async function verificarUsuario(username) {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`);
+    const data = await res.json();
+    return data.allowed;
+  } catch (err) {
+    console.error("❌ Error en verificarUsuario:", err);
+    return false;
+  }
+}
+
+async function consumirPermiso(username) {
+  try {
+    await fetch(`${BACKEND_URL}/api/consume/${username}`, { method: "POST" });
+  } catch (err) {
+    console.error("⚠️ Error al consumir permiso:", err);
+  }
+}
+
+async function enviarMensaje(username, voice, message) {
+  try {
+    const endpoint = "/api/tts";
+    const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, voice, message })
     });
+    return res.ok;
+  } catch (err) {
+    console.error("❌ Error en enviarMensaje:", err);
+    return false;
+  }
+}
 
-    async function verificarUsuario(username) {
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/allowed/${username}`);
-        const data = await res.json();
-        return data.allowed;
-      } catch (err) {
-        console.error("❌ Error en verificarUsuario:", err);
-        return false;
-      }
+async function enviar() {
+  const username = document.getElementById("usuario").value.trim().toLowerCase();
+  const message = document.getElementById("mensaje").value;
+  const botonEnviar = document.querySelector('button[onclick="enviar()"]');
+
+  if (!username || !message || !vozSeleccionada) {
+    alert("Por favor, rellena todos los campos y selecciona una voz.");
+    return;
+  }
+
+  botonEnviar.disabled = true;
+  botonEnviar.textContent = "Enviando...";
+
+  try {
+    const permitido = await verificarUsuario(username);
+    if (!permitido) {
+      alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
+      return;
     }
 
-    async function consumirPermiso(username) {
-      try {
-        await fetch(`${BACKEND_URL}/api/consume/${username}`, {
-          method: "POST"
-        });
-      } catch (err) {
-        console.error("⚠️ Error al consumir permiso:", err);
-      }
+    const enviado = await enviarMensaje(username, vozSeleccionada, message);
+    if (enviado) {
+      alert("✅ Mensaje enviado con éxito");
+      await consumirPermiso(username);
+    } else {
+      alert("❌ Hubo un error al enviar tu mensaje");
     }
+  } catch (error) {
+    console.error("⚠️ Error en enviar:", error);
+    alert("❌ Error inesperado al enviar.");
+  } finally {
+    botonEnviar.disabled = false;
+    botonEnviar.textContent = "Enviar mensaje";
+  }
+}
 
-    async function enviarMensaje(username, voice, message) {
-      try {
-        const endpoint = "/api/tts";
-        const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, voice, message })
-        });
+const ttsInput = document.getElementById('mensaje');
+const charCount = document.getElementById('char-count');
+const charWarning = document.getElementById('char-warning');
 
-        return res.ok;
-      } catch (err) {
-        console.error("❌ Error en enviarMensaje:", err);
-        return false;
-      }
-    }
+ttsInput.addEventListener('input', () => {
+  const length = ttsInput.value.length;
+  charCount.textContent = `${length} / 500`;
 
-    async function enviar() {
-      const username = document.getElementById("usuario").value.trim().toLowerCase();
-      const message = document.getElementById("mensaje").value;
-      const botonEnviar = document.querySelector('button[onclick="enviar()"]');
+  if (length >= 500) {
+    charCount.style.color = 'red';
+    charWarning.classList.add('visible');
+  } else if (length >= 450) {
+    charCount.style.color = 'orange';
+    charWarning.classList.remove('visible');
+  } else {
+    charCount.style.color = 'white';
+    charWarning.classList.remove('visible');
+  }
+});
+</script>
 
-      if (!username || !message || !vozSeleccionada) {
-        alert("Por favor, rellena todos los campos y selecciona una voz.");
-        return;
-      }
-
-      botonEnviar.disabled = true;
-      botonEnviar.textContent = "Enviando...";
-
-      try {
-        const permitido = await verificarUsuario(username);
-        if (!permitido) {
-          alert("No estás autorizado. Canjea la recompensa 'TTS' primero.");
-          return;
-        }
-
-        const enviado = await enviarMensaje(username, vozSeleccionada, message);
-        if (enviado) {
-          alert("✅ Mensaje enviado con éxito");
-          await consumirPermiso(username);
-        } else {
-          alert("❌ Hubo un error al enviar tu mensaje");
-        }
-      } catch (error) {
-        console.error("⚠️ Error en enviar:", error);
-        alert("❌ Error inesperado al enviar.");
-      } finally {
-        botonEnviar.disabled = false;
-        botonEnviar.textContent = "Enviar mensaje";
-      }
-    }
-
-    const ttsInput = document.getElementById('mensaje');
-    const charCount = document.getElementById('char-count');
-    const charWarning = document.getElementById('char-warning');
-
-    ttsInput.addEventListener('input', () => {
-      const length = ttsInput.value.length;
-      charCount.textContent = `${length} / 500`;
-
-      if (length >= 500) {
-        charCount.style.color = 'red';
-        charWarning.classList.add('visible');
-      } else if (length >= 450) {
-        charCount.style.color = 'orange';
-        charWarning.classList.remove('visible');
-      } else {
-        charCount.style.color = 'white';
-        charWarning.classList.remove('visible');
-      }
-    });
-  </script>
 </body>
 </html>
