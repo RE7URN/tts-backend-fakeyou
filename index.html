@@ -38,30 +38,34 @@
     }
 
     .container {
-      background-color: #1f1f23;
-      padding: 2rem;
-      border-radius: 0.3rem;
-      width: 90%;
-      max-width: 500px;
-      text-align: center;
-      box-shadow: none;
-      animation: fadeInUp 0.8s ease forwards;
-      min-height: 450px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+  background-color: #1f1f23;
+  padding: 2rem;
+  border-radius: 0.3rem;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: none;
+  animation: fadeInUp 0.8s ease forwards;
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0; /* <-- Añadir esto */
+  animation-fill-mode: forwards; /* <-- Añadir esto */
+}
 
-    .guia {
-      margin-left: 2rem;
-      background-color: #1f1f23;
-      padding: 2rem;
-      border-radius: 0.3rem;
-      width: 280px;
-      box-shadow: none;
-      animation: fadeInRight 1s ease forwards;
-      color: white;
-    }
+.guia {
+  margin-left: 2rem;
+  background-color: #1f1f23;
+  padding: 2rem;
+  border-radius: 0.3rem;
+  width: 280px;
+  box-shadow: none;
+  animation: fadeInRight 1s ease forwards;
+  color: white;
+  opacity: 0; /* <-- Añadir esto */
+  animation-fill-mode: forwards; /* <-- Añadir esto */
+}
 
     .footer {
       margin: 2rem auto 1rem;
