@@ -40,7 +40,7 @@
     .container {
       background-color: #1f1f23;
       padding: 2rem;
-      border-radius: 1rem;
+      border-radius: 0.3rem;
       width: 90%;
       max-width: 500px;
       text-align: center;
@@ -56,7 +56,7 @@
       margin-left: 2rem;
       background-color: #1f1f23;
       padding: 2rem;
-      border-radius: 1rem;
+      border-radius: 0.3rem;
       width: 280px;
       box-shadow: none;
       animation: fadeInRight 1s ease forwards;
@@ -85,7 +85,7 @@
       background-color: #2e2e33;
       border: 1px solid #555;
       color: #fff;
-      border-radius: 0.5rem;
+      border-radius: 0.3rem;
       font-size: 1rem;
     }
 
@@ -102,7 +102,7 @@
       background-color: #a855f7;
       border: none;
       color: white;
-      border-radius: 0.5rem;
+      border-radius: 0.3rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
@@ -124,7 +124,7 @@
       border: 1px solid #555;
       color: white;
       padding: 0.5rem;
-      border-radius: 0.5rem;
+      border-radius: 0.3rem;
       font-size: 0.9rem;
       width: 100%;
       cursor: pointer;
@@ -138,7 +138,7 @@
     .voice-buttons button img {
       width: 30px;
       height: 30px;
-      border-radius: 50%;
+      border-radius: 30%;
       object-fit: cover;
     }
 
@@ -181,6 +181,27 @@
       max-width: 180px;
       margin: 0 auto 1rem auto;
     }
+    
+    .guia ol {
+  padding-left: 1rem;
+  margin-top: 1.5rem;
+  list-style: none;
+}
+
+.guia li {
+  margin-bottom: 1.2rem;
+  padding-left: 1.5rem;
+  position: relative;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.guia li::before {
+  content: '🔹';
+  position: absolute;
+  left: 0;
+  color: #c084fc;
+}
 
     @media (max-width: 768px) {
       body { align-items: center; }
